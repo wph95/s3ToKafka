@@ -46,4 +46,4 @@ deployment:
   master:
     branch: master
     commands:
-      - aws s3 cp s3ToKafka.zip s3://{BUCKET}/{PREFIX}/
+      - aws s3 cp s3ToKafka.zip s3://${BUCKET}/${PREFIX}/
