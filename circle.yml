@@ -1,0 +1,49 @@
+machine:
+  timezone: UTC
+  services:
+  python:
+      version: 2.7.2
+
+experimental:
+  notify:
+    branches:
+      only:
+        - master
+
+dependencies:
+  pre:
+    - sudo apt-get update
+    - sudo apt-get install python-dev ruby ruby-dev gcc make rpm
+    - gem install --no-ri --no-rdoc fpm
+    - pip install virtualenv
+    - sudo pip install --upgrade awscli
+    - sudo curl -o /usr/local/bin/ecs-cli https://s3.amazonaws.com/amazon-ecs-cli/ecs-cli-linux-amd64-latest
+    - sudo chmod +x /usr/local/bin/ecs-cli
+    - ecs-cli --version
+    - ulimit -c
+    - ulimit -c unlimited -S
+
+# Cache the resolution-cache and build streams to speed things up
+  cache_directories:
+    - "/home/ubuntu/.cache/pip"
+    - "target/resolution-cache"
+    - "target/streams"
+    - "project/target/resolution-cache"
+    - "project/target/streams"
+
+test:
+  # Run this bash command instead of CircleCI's inferred commands
+  override:
+    - ./create_zip.sh
+
+  # Run these commands after the "override" commands
+  post:
+    # Copy test reports to Circle test reports dir
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/test-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - aws s3 cp s3ToKafka.zip s3://{BUCKET}/{PREFIX}/

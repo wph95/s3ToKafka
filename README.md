@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/dashbase/s3ToKafka/tree/master.svg?style=svg)](https://circleci.com/gh/dashbase/s3ToKafka/tree/master)
+
 ## S3 file to kafka by aws lambda
 
 ### 1. usage
