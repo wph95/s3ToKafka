@@ -1,9 +1,38 @@
 ## S3 file to kafka by aws lambda
 
-### 1. usage
+### How to usage
 
-1. upload zip 
-2. setting ENV ["KAFKA_HOST", "KAFKA_TOPIC"]
+ ### 1.press create lambda 
+
+
+
+### 2.select blueprint 
+
+- select runtime -> python 2.7
+- filter -> s3-get-objetct-python
+
+
+
+### 3.configure triggers
+
+- Bucket: {select your bucket}
+- Event Type: Object Created ALL
+
+
+- enable trigger: True
+
+
+
+### 4.configure function
+
+- Name: {your lambda name}
+- Runtime: python2.7
+- Code entry type: zip
+- Environment variables
+  - KAFKA_HOST => {your kafka host name}
+  - KAFKA_TOPIC => {your kafka topic name}
+- Handler (!important) : s3ToKafka.handler
+
 
 
 
